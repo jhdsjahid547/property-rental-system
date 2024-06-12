@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
@@ -24,11 +25,14 @@ class AuthController extends Controller
             ]);
         }
         $request->session()->regenerate();
-        return redirect()->intended();
+        return redirect()->intended('/listing');
     }
 
-    public function destroy()
+    public function destroy(Request $request)
     {
-        //
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('listing.index');
     }
 }
