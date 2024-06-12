@@ -1,0 +1,91 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Listing;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+class ListingController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        //view('listing.index')
+        return inertia('Listing/IndexListing', ['listings' => Listing::all()]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return inertia('Listing/CreateListing');
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        Validator::make($request->all(), [
+            'beds' => 'required|integer|min:0|max:20',
+            'baths' => 'required|integer|min:0|max:20',
+            'area' => 'required|integer|min:15|max:1500',
+            'city' => 'required',
+            'street' => 'required',
+            'code' => 'required',
+            'street_nr' =>'required|min:1|max:1000',
+            'price' => 'required|integer|min:1|max:20000000'
+        ])->validate();
+        //if validation failed automatic return error not work blew operations.
+        Listing::createListing($request);
+        return redirect()->route('listing.index')->with('success', 'Listing was created!');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        return inertia('Listing/ShowListing', ['listing' => Listing::find($id)]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        return inertia('Listing/EditListing', ['listing' => Listing::find($id)]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        Validator::make($request->all(), [
+            'beds' => 'required|integer|min:0|max:20',
+            'baths' => 'required|integer|min:0|max:20',
+            'area' => 'required|integer|min:15|max:1500',
+            'city' => 'required',
+            'street' => 'required',
+            'code' => 'required',
+            'street_nr' =>'required|min:1|max:1000',
+            'price' => 'required|integer|min:1|max:20000000'
+        ])->validate();
+        Listing::updateListing($id, $request);
+        return redirect()->route('listing.index')->with('success', 'Listing was updated!');
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        $listing = Listing::find($id);
+        $listing->delete();
+        return redirect()->back()->with('success', 'Listing was deleted!');
+    }
+}
