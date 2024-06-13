@@ -25,6 +25,9 @@ const hasFlash = computed(() => flashSuccess.value ? snackbar.value = true : sna
                 </Link>
             </div>
             <div v-else>
+                <Link :href="route('account.create')" class="pe-4">
+                    <v-btn variant="flat" color="indigo-accent-3">Register</v-btn>
+                </Link> 
                 <Link :href="route('login')" class="pe-4">
                     <v-btn variant="flat" color="indigo-accent-3">Login</v-btn>
                 </Link>                
