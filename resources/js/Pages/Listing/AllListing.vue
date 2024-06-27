@@ -1,4 +1,6 @@
 <script setup>
+import { computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import { useMonthlyPayment } from '../../Composable/useMonthlyPayment';
 import ListingPrice from '../../Components/ListingPrice.vue';
 import ListingSpace from '../../Components/ListingSpace.vue';
@@ -9,7 +11,8 @@ import { Link } from '@inertiajs/vue3';
 const props = defineProps({
     listing: Object,
 });
-
+const user = computed(() => usePage().props.user);
+const method = computed(() => user.value === null ? 'GET' : 'DELETE');
 const { monthlyPayment } = useMonthlyPayment(props.listing.price, 2.5, 25);
 </script>
 
@@ -25,9 +28,6 @@ const { monthlyPayment } = useMonthlyPayment(props.listing.price, 2.5, 25);
         </Link>
         <div>
             <Link :href="route('listing.edit', {listing: listing.id})" class="text-decoration-none text-black">Edit</Link>
-        </div>
-        <div>
-            <Link :href="route('listing.destroy', {listing: listing.id})" method="DELETE" as="button">Delete</Link>
         </div>
     </border-box>
 </template>

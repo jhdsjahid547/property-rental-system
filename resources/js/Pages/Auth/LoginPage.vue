@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, Link } from '@inertiajs/vue3';
 
 const visible = ref(false);
 const form = useForm({
@@ -47,6 +47,10 @@ const login = () => form.post(route('login.store'));
                     block>
                     Sign In
                     </v-btn>
+                    <div class="text-center mt-2">
+                        Need an account?
+                        <Link :href="route('account.create')" class="text-decoration-none font-weight-bold">Click here</Link>
+                    </div>
             </v-form>
         </v-card>
     </div>

@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue';
-import { useForm } from '@inertiajs/vue3';
+import { useForm, Link } from '@inertiajs/vue3';
 
 const visible = ref(false);
 const visibleConfirm = ref(false);
@@ -72,6 +72,10 @@ const register = () => form.post(route('account.store'));
                     block>
                     Sign Up
                     </v-btn>
+                    <div class="text-center mt-2">
+                        Already have account?
+                        <Link :href="route('login')" class="text-decoration-none font-weight-bold">Click here</Link>
+                    </div>
             </v-form>
         </v-card>
     </div>
