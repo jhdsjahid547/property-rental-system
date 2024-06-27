@@ -26,8 +26,5 @@ const { monthlyPayment } = useMonthlyPayment(props.listing.price, 2.5, 25);
             <listing-space :listing="listing" class="text-black text-subtitle-1"></listing-space>
             <listing-address :listing="listing" class="text-blue-grey-darken-1"></listing-address>
         </Link>
-        <div>
-            <Link :href="route('listing.edit', {listing: listing.id})" class="text-decoration-none text-black">Edit</Link>
-        </div>
     </border-box>
 </template>

@@ -6,6 +6,7 @@ use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Validator;
 
 class RealtorListingController extends Controller
 {
@@ -19,7 +20,60 @@ class RealtorListingController extends Controller
             'deleted' => $request->boolean('deleted'),
             ...$request->only(['by', 'order'])
         ];
-        return inertia('Realtor/IndexRealtor', ['listings' => Auth::user()->listings()->filter($filters)->get()]);
+        return inertia('Realtor/IndexRealtor', [
+            'filters' => $filters,
+            'listings' => Auth::user()->listings()->filter($filters)->paginate(5)->withQueryString()
+        ]);
+    }
+
+    public function create()
+    {
+        Gate::authorize('create', Listing::class);
+        return inertia('Realtor/CreateListing');
+    }
+
+    public function store(Request $request)
+    {
+        Gate::authorize('create', Listing::class);
+        Validator::make($request->all(), [
+            'beds' => 'required|integer|min:0|max:20',
+            'baths' => 'required|integer|min:0|max:20',
+            'area' => 'required|integer|min:15|max:1500',
+            'city' => 'required',
+            'street' => 'required',
+            'code' => 'required',
+            'street_nr' =>'required|min:1|max:1000',
+            'price' => 'required|integer|min:1|max:20000000'
+        ])->validate();
+        //if validation failed automatic return error not work blew operations.
+        Listing::createListing($request);
+        //$request->user()->listings()->save($listing);
+        return redirect()->route('realtor.listing.index')->with('success', 'Listing was created!');
+    }
+
+    public function edit(string $id)
+    {
+        $this->listing = Listing::find($id);
+        Gate::authorize('update', $this->listing);
+        return inertia('Realtor/EditListing', ['listing' => $this->listing]);
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $this->listing = Listing::find($id);
+        Gate::authorize('update', $this->listing);
+        Validator::make($request->all(), [
+            'beds' => 'required|integer|min:0|max:20',
+            'baths' => 'required|integer|min:0|max:20',
+            'area' => 'required|integer|min:15|max:1500',
+            'city' => 'required',
+            'street' => 'required',
+            'code' => 'required',
+            'street_nr' =>'required|min:1|max:1000',
+            'price' => 'required|integer|min:1|max:20000000'
+        ])->validate();
+        Listing::updateListing($id, $request);
+        return redirect()->route('realtor.listing.index')->with('success', 'Listing was updated!');
     }
 
     public function destroy(string $id)

@@ -17,7 +17,7 @@ const hasFlash = computed(() => flashSuccess.value ? snackbar.value = true : sna
             <v-spacer></v-spacer>
             <div v-if="user">
                 <Link class="text-blue-gray text-decoration-none" :href="route('realtor.listing.index')">{{ user.name }}</Link>&nbsp;
-                <Link :href="route('listing.create')" class="pe-4">
+                <Link :href="route('realtor.listing.create')" class="pe-4">
                     <v-btn prepend-icon="mdi-plus" variant="flat" color="indigo-accent-3">Create Listing</v-btn>
                 </Link>
                 <Link :href="route('logout')" method="DELETE" as="button" class="pe-4">
