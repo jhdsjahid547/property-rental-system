@@ -24,7 +24,7 @@ defineProps({
                 <border-box>
                     <v-row>
                         <v-col cols="12" md="8" sm="8" align-self="start">
-                            <div class="d-xl-flex ga-2">
+                            <div class="d-xl-flex ga-2" :class="{'text-grey': listing.deleted_at}">
                                 <listing-price :price="listing.price" class="text-h6 font-weight-bold"></listing-price>
                                 <listing-space :listing="listing"></listing-space>
                                 <listing-address :listing="listing" class="text-blue-grey-darken-1"></listing-address>
@@ -36,9 +36,12 @@ defineProps({
                                 <Link :href="route('realtor.listing.edit', {listing: listing.id})">
                                     <v-btn density="comfortable" color="lime-accent-1" icon="mdi-database-edit"></v-btn>
                                 </Link>
-                                <Link :href="route('realtor.listing.destroy', { listing: listing.id })" as="button" method="DELETE">
+                                <Link v-if="!listing.deleted_at" :href="route('realtor.listing.destroy', { listing: listing.id })" as="button" method="DELETE">
                                     <v-btn density="comfortable" color="red-lighten-3" icon="mdi-delete"></v-btn>
-                                </Link>    
+                                </Link>  
+                                <Link v-else :href="route('realtor.listing.restore', { listing: listing.id })" as="button" method="PUT">
+                                    <v-btn density="comfortable" color="purple-lighten-4" icon="mdi-delete-restore"></v-btn>
+                                </Link>   
                             </div>
                         </v-col>
                     </v-row>

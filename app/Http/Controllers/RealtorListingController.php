@@ -53,14 +53,14 @@ class RealtorListingController extends Controller
 
     public function edit(string $id)
     {
-        $this->listing = Listing::find($id);
+        $this->listing = Listing::withTrashed()->find($id);
         Gate::authorize('update', $this->listing);
         return inertia('Realtor/EditListing', ['listing' => $this->listing]);
     }
 
     public function update(Request $request, string $id)
     {
-        $this->listing = Listing::find($id);
+        $this->listing = Listing::withTrashed()->find($id);
         Gate::authorize('update', $this->listing);
         Validator::make($request->all(), [
             'beds' => 'required|integer|min:0|max:20',
@@ -82,5 +82,13 @@ class RealtorListingController extends Controller
         Gate::authorize('delete', $this->listing);
         $this->listing->deleteOrFail();
         return redirect()->back()->with('success', 'Listing was deleted!');
+    }
+
+    public function restore($id)
+    {
+        $this->listing = Listing::withTrashed()->find($id);
+        Gate::authorize('restore', $this->listing);
+        $this->listing->restore();
+        return redirect()->back()->with('success', 'Listing was restored!');
     }
 }

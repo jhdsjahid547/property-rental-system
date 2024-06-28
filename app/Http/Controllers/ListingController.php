@@ -27,7 +27,7 @@ class ListingController extends Controller
      */
     public function show(string $id)
     {
-        $this->listing = Listing::find($id);
+        $this->listing = Listing::withTrashed()->find($id);
         // if (Auth::user()->cannot('view', $this->listing)) {
         //     abort(403);
         // }
