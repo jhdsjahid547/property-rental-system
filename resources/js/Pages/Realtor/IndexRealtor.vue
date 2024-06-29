@@ -22,7 +22,7 @@ defineProps({
         <v-row no-gutters>
             <v-col cols="12" md="6" sm="6" v-for="listing in listings.data" :key="listing.id">
                 <border-box>
-                    <v-row>
+                    <v-row no-gutters>
                         <v-col cols="12" md="8" sm="8" align-self="start">
                             <div class="d-xl-flex ga-2" :class="{'text-grey': listing.deleted_at}">
                                 <listing-price :price="listing.price" class="text-h6 font-weight-bold"></listing-price>
@@ -33,7 +33,7 @@ defineProps({
                         <v-col cols="12" md="4" sm="4" align-self="end">
                             <div class="d-flex align-self-center ma-2 pa-2">
                                 <v-btn density="comfortable" color="light-green-lighten-3" icon="mdi-printer-eye" :href="route('listing.show', { listing: listing.id })" target="_blank"></v-btn>
-                                <Link :href="route('realtor.listing.edit', {listing: listing.id})">
+                                <Link :href="route('realtor.listing.edit', { listing: listing.id })">
                                     <v-btn density="comfortable" color="lime-accent-1" icon="mdi-database-edit"></v-btn>
                                 </Link>
                                 <Link v-if="!listing.deleted_at" :href="route('realtor.listing.destroy', { listing: listing.id })" as="button" method="DELETE">
@@ -42,6 +42,11 @@ defineProps({
                                 <Link v-else :href="route('realtor.listing.restore', { listing: listing.id })" as="button" method="PUT">
                                     <v-btn density="comfortable" color="purple-lighten-4" icon="mdi-delete-restore"></v-btn>
                                 </Link>   
+                            </div>
+                            <div class="ml-13">
+                                <Link :href="route('realtor.listing.image.create', { listing: listing.id })">
+                                    <v-btn density="comfortable" color="blue" icon="mdi-image"></v-btn>
+                                </Link>  
                             </div>
                         </v-col>
                     </v-row>

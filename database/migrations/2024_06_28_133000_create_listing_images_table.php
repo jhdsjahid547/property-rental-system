@@ -1,9 +1,9 @@
 <?php
 
+use App\Models\Listing;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use App\Models\User;
 
 return new class extends Migration
 {
@@ -12,8 +12,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('listings', function (Blueprint $table) {
-            $table->foreignIdFor(User::class, 'user_id')->after('id')->constrained('users');
+        Schema::create('listing_images', function (Blueprint $table) {
+            $table->id();
+            $table->string('filename');
+            $table->foreignIdFor(Listing::class)->constrained('listings');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('listings', function (Blueprint $table) {
-            $table->dropConstrainedForeignIdFor('user_id');
-        });
+        Schema::dropIfExists('listing_images');
     }
 };

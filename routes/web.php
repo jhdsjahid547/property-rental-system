@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\RealtorListingController;
+use App\Http\Controllers\RealtorListingImageController;
 use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,6 @@ Route::resource('account', UserAccountController::class)->only(['create', 'store
 
 Route::prefix('realtor')->name('realtor.')->middleware('auth')->group(function () {
     Route::put('listing/{listing}/restore', [RealtorListingController::class, 'restore'])->name('listing.restore');
-    Route::resource('listing', RealtorListingController::class)
-    ->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('listing', RealtorListingController::class)->only(['index', 'create', 'store', 'edit', 'update', 'destroy']);
+    Route::resource('listing.image', RealtorListingImageController::class)->only(['create', 'store', 'destroy']);
 });

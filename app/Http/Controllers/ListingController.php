@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 
 class ListingController extends Controller
 {
@@ -27,11 +28,11 @@ class ListingController extends Controller
      */
     public function show(string $id)
     {
-        $this->listing = Listing::withTrashed()->find($id);
+        $this->listing = Listing::withTrashed()->find($id)->load('images');
         // if (Auth::user()->cannot('view', $this->listing)) {
         //     abort(403);
         // }
         Gate::authorize('view', $this->listing);
-        return inertia('Listing/ShowListing', ['listing' => $this->listing]);
+        return inertia('Listing/ShowListing', ['listing' => $this->listing, 'baseUrl' => URL::to('/') . '/']);
     }
 }

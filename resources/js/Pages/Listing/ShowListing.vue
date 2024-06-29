@@ -7,7 +7,8 @@ import ListingAddress from '../../Components/ListingAddress.vue';
 import BorderBox from '../../Components/UI/BorderBox.vue';
 
 const props = defineProps({
-    listing: Object
+    listing: Object,
+    baseUrl: String
 });
 
 const interestRate = ref(2.5);
@@ -74,7 +75,18 @@ const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(props.lis
         </v-col>
         <v-col cols="12" md="7" class="pa-3">
             <v-card class="text-center d-flex flex-column justify-center" elevation="3" height="100%">
-                No image
+                <v-row no-gutters v-if="listing.images.length">
+                    <v-col cols="6" v-for="image in listing.images" :key="image.id">
+                        <v-img class="mb-2 mx-auto border-lg" rounded="lg" :src="image.src">
+                            <template v-slot:error>
+                                <v-img class="mx-auto" 
+                                    :src="props.baseUrl + 'storage/images/2lO29Y3LMNyv964UeCGvHcKdmaQAOYkT4PufGLKg.png'"
+                                ></v-img>
+                            </template>
+                        </v-img>
+                    </v-col>
+                </v-row>
+                <div v-else>No image found.</div>
             </v-card>
         </v-col>
     </v-row>
