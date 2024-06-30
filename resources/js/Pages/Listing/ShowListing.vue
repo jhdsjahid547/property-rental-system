@@ -1,19 +1,24 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
+import { usePage } from '@inertiajs/vue3';
 import { useMonthlyPayment } from '../../Composable/useMonthlyPayment';
 import ListingPrice from '../../Components/ListingPrice.vue';
 import ListingSpace from '../../Components/ListingSpace.vue';
 import ListingAddress from '../../Components/ListingAddress.vue';
 import BorderBox from '../../Components/UI/BorderBox.vue';
+import MakeOffer from './MakeOffer.vue';
+import OfferMade from './OfferMade.vue';
 
 const props = defineProps({
     listing: Object,
+    offerMade: Object,
     baseUrl: String
 });
-
+const user = computed(() => usePage().props.user);
+const offer = ref(props.listing.price);
 const interestRate = ref(2.5);
 const duration = ref(25);
-const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(props.listing.price, interestRate, duration);
+const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(offer, interestRate, duration);
 </script>
 
 <template>
@@ -28,7 +33,7 @@ const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(props.lis
             <border-box>
                 <template #header>Monthly Payment</template>
                 <div>
-                    <label>Interest rate ({{ interestRate }}%)</label>
+                    <span>Interest rate ({{ interestRate }}%)</span>
                     <v-slider
                         v-model.number="interestRate"
                          min="0.1" 
@@ -38,7 +43,7 @@ const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(props.lis
                     ></v-slider>
                 </div>
                 <div>
-                    <label>Duration ({{ duration }} years)</label>
+                    <span>Duration ({{ duration }} years)</span>
                     <v-slider
                         v-model.number="duration"
                         min="3" 
@@ -51,27 +56,21 @@ const { monthlyPayment, totalPaid, totalInterest } = useMonthlyPayment(props.lis
                     <div class="text-blue-grey-darken-1 font-weight-medium">Your monthly payment</div>
                     <listing-price :price="monthlyPayment" class="text-h5 font-weight-bold"></listing-price>
                 </div>
-                <v-row>
-                    <v-col cols="6">
-                        Total Paid:
-                    </v-col>
-                    <v-col cols="6">
-                        <listing-price :price="totalPaid"></listing-price>
-                    </v-col>
-                    <v-col cols="6">
-                        Principle Paid:
-                    </v-col>
-                    <v-col cols="6">
-                        <listing-price :price="listing.price"></listing-price>
-                    </v-col>
-                    <v-col cols="6">
-                        Total Interest:
-                    </v-col>
-                    <v-col cols="6">
-                        <listing-price :price="totalInterest"></listing-price>
-                    </v-col>
-                </v-row>
+                <div class="d-flex justify-space-between text-grey mt-2">
+                    <div>Total Paid:</div>
+                    <listing-price :price="totalPaid"></listing-price>
+                </div>
+                <div class="d-flex justify-space-between text-grey mt-2">
+                    <div>Principle Paid:</div>
+                    <listing-price :price="listing.price"></listing-price>
+                </div>
+                <div class="d-flex justify-space-between text-grey mt-2">
+                    <div>Total Interest:</div>
+                    <listing-price :price="totalInterest"></listing-price>
+                </div>
             </border-box>
+            <make-offer v-if="user && !offerMade" :listing-id="listing.id" :price="listing.price" @offer-updated="offer = $event"></make-offer>
+            <offer-made v-if="user && offerMade" :offer="offerMade"></offer-made>
         </v-col>
         <v-col cols="12" md="7" class="pa-3">
             <v-card class="text-center d-flex flex-column justify-center" elevation="3" height="100%">

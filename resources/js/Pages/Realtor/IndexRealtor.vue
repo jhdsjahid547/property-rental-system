@@ -24,7 +24,14 @@ defineProps({
                 <border-box>
                     <v-row no-gutters>
                         <v-col cols="12" md="8" sm="8" align-self="start">
+                            <v-badge
+                            v-if="listing.sold_at != null"
+                            color="purple"
+                            content="Sold"
+                            inline
+                            ></v-badge>
                             <div class="d-xl-flex ga-2" :class="{'text-grey': listing.deleted_at}">
+
                                 <listing-price :price="listing.price" class="text-h6 font-weight-bold"></listing-price>
                                 <listing-space :listing="listing"></listing-space>
                                 <listing-address :listing="listing" class="text-blue-grey-darken-1"></listing-address>
@@ -43,9 +50,12 @@ defineProps({
                                     <v-btn density="comfortable" color="purple-lighten-4" icon="mdi-delete-restore"></v-btn>
                                 </Link>   
                             </div>
-                            <div class="ml-10">
+                            <div class="ml-2">
                                 <Link :href="route('realtor.listing.image.create', { listing: listing.id })">
-                                    <v-btn density="comfortable" color="blue" prepend-icon="mdi-image">{{ listing.images_count }}</v-btn>
+                                    <v-btn density="comfortable" color="light-blue-lighten-4" prepend-icon="mdi-image">{{ listing.images_count }}</v-btn>
+                                </Link>  
+                                <Link :href="route('realtor.listing.show', { listing: listing.id })">
+                                    <v-btn density="comfortable" color="orange-lighten-4" prepend-icon="mdi-offer">{{ listing.offers_count }}</v-btn>
                                 </Link>  
                             </div>
                         </v-col>

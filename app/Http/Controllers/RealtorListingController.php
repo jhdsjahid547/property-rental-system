@@ -22,8 +22,15 @@ class RealtorListingController extends Controller
         ];
         return inertia('Realtor/IndexRealtor', [
             'filters' => $filters,
-            'listings' => Auth::user()->listings()->filter($filters)->withCount('images')->paginate(5)->withQueryString()
+            'listings' => Auth::user()->listings()->filter($filters)->withCount('images')->withCount('offers')->paginate(5)->withQueryString()
         ]);
+    }
+
+    public function show($id)
+    {
+        $this->listing = Listing::find($id);
+        Gate::authorize('show', $this->listing);
+        return inertia('Realtor/ShowOffer', ['listing' => $this->listing->load('offers', 'offers.bidder')]);
     }
 
     public function create()
