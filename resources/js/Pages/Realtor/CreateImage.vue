@@ -16,8 +16,19 @@ router.on('progress', (event) => {
 const form = useForm({
     images: []
 });
+const removeError = () => {
+    Object.keys(form.errors).forEach(key => {
+        if (key.startsWith('images.')) {
+            delete form.errors[key];
+        }
+    });
+};
 const imageErrorsMessages = computed(() => {
     let messages = [];
+    if (!!form.errors.images) {
+        messages.push(form.errors.images);
+        removeError();
+    }
     Object.keys(form.errors).forEach(key => {
         if (key.startsWith('images.')) {
             messages.push('Image ' + (Number((key).replace('images.', '')) + 1) + form.errors[key].replace(/^The images\..* field/, ''));
@@ -26,11 +37,10 @@ const imageErrorsMessages = computed(() => {
     return messages;
 });
 const removeImageErrors = () => {
-    Object.keys(form.errors).forEach(key => {
-        if (key.startsWith('images.')) {
-            delete form.errors[key];
-        }
-    });
+    if (!!form.errors.images) {
+        form.clearErrors('images')
+    }
+    removeError();
 };
 const canUpload = computed(() => form.images.length);
 const upload = () => form.post(route('realtor.listing.image.store', { listing: props.listing.id }), {
@@ -48,6 +58,7 @@ const upload = () => form.post(route('realtor.listing.image.store', { listing: p
                 :error="!!imageErrorsMessages.length"
                 :error-messages="imageErrorsMessages.join(' || ')"
                 @input="removeImageErrors"
+                @click:clear="removeImageErrors"
                 label="Select Image"
                 prepend-icon="mdi-camera"
                 accept="image/png, image/jpeg"
@@ -67,7 +78,7 @@ const upload = () => form.post(route('realtor.listing.image.store', { listing: p
         <div class="mt-2">
             <v-row no-gutters>
                 <v-col cols="4" v-for="image in listing.images" :key="image.id">
-                    <v-img class="mx-auto border-lg" rounded="lg" :src="image.src">
+                    <v-img class="mx-auto border-lg" max-height="200" rounded="lg" :src="image.src">
                         <template v-slot:error>
                             <v-img class="mx-auto" 
                                 :src="props.baseUrl + 'storage/images/2lO29Y3LMNyv964UeCGvHcKdmaQAOYkT4PufGLKg.png'"

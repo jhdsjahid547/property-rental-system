@@ -43,9 +43,9 @@ defineProps({
                                     <v-btn density="comfortable" color="purple-lighten-4" icon="mdi-delete-restore"></v-btn>
                                 </Link>   
                             </div>
-                            <div class="ml-13">
+                            <div class="ml-10">
                                 <Link :href="route('realtor.listing.image.create', { listing: listing.id })">
-                                    <v-btn density="comfortable" color="blue" icon="mdi-image"></v-btn>
+                                    <v-btn density="comfortable" color="blue" prepend-icon="mdi-image">{{ listing.images_count }}</v-btn>
                                 </Link>  
                             </div>
                         </v-col>

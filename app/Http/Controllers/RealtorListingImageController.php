@@ -24,7 +24,10 @@ class RealtorListingImageController extends Controller
         $listing = Listing::find($id);
         if ($request->hasFile('images')) {
             $request->validate([
-                'images.*' => 'mimes:jpg,png,jpeg|max:200'
+                'images' => 'max:4',
+                'images.*' => 'bail|mimes:jpg,png,jpeg|max:200'
+            ], [
+                'images.max' => 'Limit reached! Maximum 4 files upload at a time.'
             ]);
             foreach ($request->file('images') as $file) {
                 $path = $file->store('images', 'public');
