@@ -23,6 +23,7 @@ class Offer extends Model
         self::$offer->listing_id = $id;
         self::$offer->amount = $request->amount;
         self::$offer->save();
+        return self::$offer->id;
     }
 
     public function listing(): BelongsTo

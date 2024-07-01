@@ -20,7 +20,7 @@ defineProps({
     </section>
     <section class="mb-8">
         <v-row no-gutters>
-            <v-col cols="12" md="6" sm="6" v-for="listing in listings.data" :key="listing.id">
+            <v-col v-if="listings.data.length" cols="12" md="6" sm="6" v-for="listing in listings.data" :key="listing.id">
                 <border-box>
                     <v-row no-gutters>
                         <v-col cols="12" md="8" sm="8" align-self="start">
@@ -62,6 +62,7 @@ defineProps({
                     </v-row>
                 </border-box>
             </v-col>
+            <v-col v-else cols="12">No listing yet</v-col>
         </v-row>
     </section>
     <section v-if="listings.data.length" class="d-flex align-center flex-column mt-4 mb-4">

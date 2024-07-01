@@ -4,6 +4,7 @@ import { ref, computed } from 'vue';
 const timeout = ref(3000);
 const flashSuccess = computed(() => usePage().props.flash.success);
 const user = computed(() => usePage().props.user);
+const notificationCount = computed(() => Math.min(usePage().props.user.notificationCount, 9));
 const snackbar = ref(false);
 const hasFlash = computed(() => flashSuccess.value ? snackbar.value = true : snackbar.value = false);
 </script>
@@ -16,6 +17,14 @@ const hasFlash = computed(() => flashSuccess.value ? snackbar.value = true : sna
             </Link>
             <v-spacer></v-spacer>
             <div v-if="user">
+                <Link :href="route('notification.index')">
+                    <v-btn v-if="notificationCount" stacked>
+                        <v-badge color="error" :content="notificationCount">
+                            <v-icon>mdi-bell-outline</v-icon>
+                        </v-badge>
+                    </v-btn>
+                    <v-btn v-else icon="mdi-bell-outline"></v-btn>
+                </Link>
                 <Link class="text-blue-gray text-decoration-none" :href="route('realtor.listing.index')">{{ user.name }}</Link>&nbsp;
                 <Link :href="route('realtor.listing.create')" class="pe-4">
                     <v-btn prepend-icon="mdi-plus" variant="flat" color="indigo-accent-3">Create Listing</v-btn>

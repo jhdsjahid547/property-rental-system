@@ -29,7 +29,7 @@ class RealtorListingController extends Controller
     public function show($id)
     {
         $this->listing = Listing::find($id);
-        Gate::authorize('show', $this->listing);
+        //Gate::authorize('show', $this->listing);
         return inertia('Realtor/ShowOffer', ['listing' => $this->listing->load('offers', 'offers.bidder')]);
     }
 
